@@ -90,4 +90,69 @@ FilterDiagnosis2 <- function(data,diagnosis_id){
   return(data)
 }
 
+AddDiagnosis1 <- function(data){
+  data$diag1 <- NA
+  for (i in 1:nrow(diag1)){
+    cat(sprintf("%s de %s\r",i,nrow(diag1)))
+    start <- diag1[i,]$start
+    end <- diag1[i,]$end
+    id <- diag1[i,]$id
+    data$temp <- as.numeric(substr(gsub("V","",data$diag_ppal),1,3))
+    if(nrow(data[data$temp>=start & data$temp<=end,])>0){
+      data[data$temp>=start & data$temp<=end,]$diag1 <- id
+    }
+  }
+  data <- data %>% select(-temp)
+  return(data)
+}
+
+AddDiagnosis2 <- function(data){
+  data$diag2 <- NA
+  for (i in 1:nrow(diag2)){
+    cat(sprintf("%s de %s\r",i,nrow(diag2)))
+    start <- as.numeric(gsub("V","",diag2[i,]$start))
+    end <- as.numeric(gsub("V","",diag2[i,]$end))
+    id <- diag2[i,]$id
+    if(!diag2[i,]$V){
+      data$temp <- as.numeric(substr(gsub("V","",data$diag_ppal),1,3))
+      if (nrow(data[!grepl("V",data$diag_ppal) & data$temp>=start & data$temp<=end,])>0){
+        data[!grepl("V",data$diag_ppal) & data$temp>=start & data$temp<=end,]$diag2 <- id
+      }
+    } else {
+      data$temp <- as.numeric(substr(gsub("V","",data$diag_ppal),1,2))
+      if (nrow(data[grepl("V",data$diag_ppal) & data$temp>=start & data$temp<=end,])>0){
+        data[grepl("V",data$diag_ppal) & data$temp>=start & data$temp<=end,]$diag2 <- id
+      }
+    }
+  }
+  data <- data %>% select(-temp)
+  return(data)
+}
+
+TraduceCodigoEspecifico <- function(codigo){
+  if (nchar(codigo)==4){
+    if (grepl("V",codigo)==FALSE){
+      codigo <- paste(substr(codigo, 1, 3), ".", substr(codigo, 4, 4), sep = "")
+    }
+  }
+  url <- sprintf("http://icd9cm.chrisendres.com/index.php?srchtype=diseases&srchtext=%s&Submit=Search&action=search",codigo)
+  info <- readLines(url)
+  info <- info[grepl(codigo,info)][2]
+  info <- strsplit(info,codigo)[[1]][2]
+  info <- gsub("</div>","",info)
+  return(info)
+}
+
+AddDiagnosis3 <- function(data){
+  codes <- unique(data$diag_ppal)
+  data$diag3 <- NA
+  for (code in codes){
+    i <- 1
+    cat(sprintf("%s de %s\r",i,length(codes)))
+    diag3 <- TraduceCodigoEspecifico(code)
+    data[data$diag_ppal==code,]$diag3 <- diag3
+    i <- i + 1
+  }
+  return(data)
+}
 
