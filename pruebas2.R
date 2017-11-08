@@ -42,4 +42,16 @@ esguinces <- lesiones.y %>% group_by(diag) %>% summarise(tt=sum(total)) %>% top_
 esguinces <- esguinces$diag
 lesiones.y <- lesiones.y %>% filter(diag %in% esguinces)
 lesiones.y$sex <- factor(x = lesiones.y$sex,labels = c("Hombre","Mujer"))
+
 g2 <- ggplot(data=lesiones.y) + geom_bar(aes(x=sex,y=total),stat="identity",position="dodge") + facet_wrap(~diag,nrow = 2,ncol = 5,scales = "free") + labs(title="Prevalencia de ingresos urgentes relacionados con esguinces por sexo",subtitle="Casos totales",caption="Encuesta de morbilidad.2005-2015") + xlab("Sexo") + ylab("") + theme_bw()
+
+#Myth buster
+
+partos <- ll %>% FilterEmergency() %>% FilterDiagnosis2(77) %>% AddDiagnosis3() %>% ReduceData(provincia = FALSE,date = "day",sex = FALSE)
+#los datos de 2014 son kk
+partos <- partos %>% filter(year(fecha)!=2004)
+library(lunar)
+partos$phase <- lunar.phase(partos$fecha,name=8)
+partos <- partos %>% group_by(phase) %>% summarise(total=sum(total))
+
+g3 <- ggplot(partos) + geom_bar(aes(x=phase,y=total),stat="identity",position = "dodge") + labs(title="Número de partos y fase lunar",subtitle="Casos totales",caption="Encuesta de morbilidad.2005-2015") + xlab("Fase Lunar") + ylab("") + theme_bw()
