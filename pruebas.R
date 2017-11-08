@@ -6,6 +6,7 @@ if(Sys.info()['sysname']=="windows"){
 library(readr)
 library(dplyr)
 library(MorbiditySpain)
+library(lubridate)
 
 ll <- GetMorbiData(y1 = 2014,y2 = 2015)
 
@@ -15,4 +16,7 @@ ll_diag1 <- AddDiagnosis1(ll2)
 ll_diag1 <- AddDiagnosis2(ll_diag1)
 ll_diag1 <- AddDiagnosis3(ll_diag1)
 
-ll.day <- ll %>% ReduceData(provincia = FALSE,date = "day",diag = "diag1")
+ll.month <- ll %>% ReduceData(provincia = TRUE,date = "month",diag = "diag1")
+
+ll.month %>% SetPrevalence()
+

@@ -1,6 +1,6 @@
-ReduceData <- function(data,provincia=TRUE,date="day",diag=NULL){
+ReduceData <- function(data,provincia=TRUE,date="day",diag=NULL,sex=FALSE){
   if(provincia){
-    data <- data %>% dplyr::group_by(prov)
+    data <- data %>% dplyr::group_by(prov=prov_hosp)
   }
   if (!(date %in% c("day","month","year"))){
     stop("We only know about daily, monthly,yearly reduction")
@@ -9,10 +9,10 @@ ReduceData <- function(data,provincia=TRUE,date="day",diag=NULL){
     data <- data %>% dplyr::group_by(fecha=fecha_ingreso,add = TRUE)
   }
   if(date=="month"){
-    data <- data %>% dplyr::group_by(month=as.Date(fecha_ingreso,format="%Y%m"),add=TRUE)
+    data <- data %>% dplyr::group_by(fecha=format(as.Date(fecha_ingreso),"%Y-%m-01"),add=TRUE)
   }
   if(date=="year"){
-    data <- data %>% dplyr::group_by(year=year(as.Date(fecha_ingreso)),add=TRUE)
+    data <- data %>% dplyr::group_by(fecha=format(as.Date(fecha_ingreso),"%Y-01-01"),add=TRUE)
   }
   if(!is.null(diag)){
     if (diag=="diag1"){
@@ -37,5 +37,29 @@ ReduceData <- function(data,provincia=TRUE,date="day",diag=NULL){
       stop("We only know about diag1, diag2, diag3 reduction")
     }
   }
+  if (sex){
+    data <- data %>% dplyr::group_by(sex=sexo,add=TRUE)
+  }
   data <- data %>% dplyr::summarise(total=n())
+}
+
+SetPrevalence <- function(data,pop="total"){
+  if(!("total" %in% colnames(data))){
+    stop("Prevalences is only for accumulated values")
+  }
+  data$total.prev <- NA
+  if (!(pop %in% c("total","males","females"))){
+    stop("You have to choose, total, males or females")
+  }
+  provs <- unique(data$prov)
+  years <- unique(year(as.Date(data$fecha)))
+  for (p in provs){
+    for (y in years){
+      prov <- provincias[provincias$Codigo==p,]$nombre
+      pob <- poblacion %>% filter(tipo==pop) %>% filter(year==y) %>% filter(provincia==prov)
+      pob <- as.numeric(pob$pob)
+      data[data$prov==p & year(data$fecha)==y,]$total.prev <- round(data[data$prov==p & year(as.Date(data$fecha))==y,]$total / (pob / 1000), 4)
+    }
+  }
+  return(data)
 }
