@@ -8,8 +8,12 @@ library(dplyr)
 library(MorbiditySpain)
 library(lubridate)
 
-ll <- GetMorbiData(y1 = 2014,y2 = 2015)
-
+if (file.exists("morbi_data.rds")==FALSE){
+  ll <- GetMorbiData(y1 = 2005,y2 = 2015)
+  saveRDS(ll,"morbi_data.rds")
+} else {
+  ll <- readRDS("morbi_data.rds")
+}
 ll <- ll %>% FilterProvincia(28) %>% FilterEmergency() %>% filter(edad<17)
 ll2 <- ll %>% FilterDiagnosis2(57)
 ll_diag1 <- AddDiagnosis1(ll2)

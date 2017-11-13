@@ -14,4 +14,7 @@ for (i in 2000:2015){
 }
 pob.df <- gather(pob.df,key = year,value = pob,3:18)
 poblacion <- pob.df
+
+# morbi.data <- GetMorbiData(y1 = 2005,y2 = 2015)
+
 save(list = c("provincias","diag1","diag2","poblacion"),file = "MorbiditySpain/R/sysdata.rda")

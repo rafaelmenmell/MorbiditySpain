@@ -14,7 +14,12 @@ library(lubridate)
 library(ggplot2)
 library(geofacet)
 
-ll <- GetMorbiData(y1 = 2005,y2 = 2015)
+if (file.exists("morbi_data.rds")==FALSE){
+  ll <- GetMorbiData(y1 = 2005,y2 = 2015)
+  saveRDS(ll,"morbi_data.rds")
+} else {
+  ll <- readRDS("morbi_data.rds")
+}
 
 ll2 <- ll %>% FilterEmergency() %>% filter(edad<17) %>% FilterDiagnosis2(35)
 ll2 <- ll2 %>% AddDiagnosis3() %>% ReduceData(provincia = TRUE,date = "year",diag = "diag3")
@@ -55,3 +60,13 @@ partos$phase <- lunar.phase(partos$fecha,name=8)
 partos <- partos %>% group_by(phase) %>% summarise(total=sum(total))
 
 g3 <- ggplot(partos) + geom_bar(aes(x=phase,y=total),stat="identity",position = "dodge") + labs(title="Número de partos y fase lunar",subtitle="Casos totales",caption="Encuesta de morbilidad.2005-2015") + xlab("Fase Lunar") + ylab("") + theme_bw()
+
+#Gripes y neumonias en menores
+
+ll.gripe <- ll %>% FilterProvincia(28) %>% FilterEmergency() %>% filter(edad<=16) %>% FilterDiagnosis2(57) %>% ReduceData(provincia = FALSE,date="day",sex = FALSE)
+#2014 no
+ll.gripe <- ll.gripe %>% filter(year(fecha)!=2004)
+ll.gripe$yday <- yday(ll.gripe$fecha)
+ll.gripe.clim <- ll.gripe %>% group_by(yday) %>% summarise(mean=mean(total,na.rm=TRUE))
+
+g4 <- ggplot(ll.gripe.clim) + geom_line(aes(x=yday,y=mean))
