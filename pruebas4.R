@@ -164,5 +164,6 @@ points(scoring_history$number_of_trees, scoring_history$validation_MSE, type="l"
 ntrees <- best_model@model$model_summary$number_of_trees
 print(ntrees)
 
-#######deeeeeep learning
+#######
+automl <- h2o.automl(x = 2:7,y = 1,training_frame = train,validation_frame = valid,max_runtime_secs = 600)
 
