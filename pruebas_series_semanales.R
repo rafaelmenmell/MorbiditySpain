@@ -34,7 +34,7 @@ ll.gripe[is.na(ll.gripe$total),]$total <- 0
 ll.gripe$week <- week(ll.gripe$fecha)
 ll.gripe.semanal <- ll.gripe %>% group_by(year=year(fecha),week=week) %>% summarise(sum=sum(total))
 
-y <- ts(ll.gripe.semanal$sum, start=2005, frequency=52)
+y <- ts(ll.gripe.semanal$sum, start=2005, frequency=53)
 
 ggseasonplot(y, year.labels=TRUE, year.labels.left=TRUE) +
   ylab("Total") + ggtitle("Seasonal plot: casos semanales de gripe")
@@ -138,21 +138,21 @@ autoplot(y, series="Data") +
                       breaks=c("Data","5-MA"))
 
 autoplot(y, series="Data") +
-  forecast::autolayer(ma(y, 52), series="52-MA") +
+  forecast::autolayer(ma(y, 53), series="53-MA") +
   xlab("Year") + ylab("Total") +
   ggtitle("Weekly flue cases") +
-  scale_colour_manual(values=c("Data"="grey","52-MA"="red"),
-                      breaks=c("Data","52-MA"))
+  scale_colour_manual(values=c("Data"="grey","53-MA"="red"),
+                      breaks=c("Data","53-MA"))
 
 y %>% decompose(type="multiplicative") %>% 
   autoplot() + xlab("Year") +
   ggtitle("Classical multiplicative decomposition of flue cases")
 
 y %>%
-  stl(s.window=52, robust=TRUE) %>%
+  stl(s.window=53, robust=TRUE) %>%
   autoplot
 
-fit <- stl(y,s.window=52, robust=TRUE)
+fit <- stl(y2,s.window=53, robust=TRUE)
 
 fit %>% seasadj() %>% naive() %>% autoplot() + ylab("New orders index") +
   ggtitle("Naive forecasts of seasonally adjusted data")
