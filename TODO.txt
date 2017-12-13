@@ -1,6 +1,9 @@
 Morbidity: poner todas las ideas en limpio y crear un documento resumen
-Lo griegos: añadir las nubes en inglés y con análisis de sentimientos
-Multas: se puede geocodificar? Si no, nada.
+
+Los griegos: añadir las nubes en inglés y con análisis de sentimientos
+
+Multas: se puede geocodificar? Si no, nada. Probar el servicio de geocoding de bing, parece el menos limitado. Puedeo incluso currarme una tarea programada via crontab.
+
 Polen: completar hasta la campaña de 2018 y acabar
 
 Objetivo tener cuatro proyectos listos a mediados de 2018
