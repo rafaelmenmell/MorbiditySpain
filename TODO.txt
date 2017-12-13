@@ -7,3 +7,12 @@ Multas: se puede geocodificar? Si no, nada. Probar el servicio de geocoding de b
 Polen: completar hasta la campaña de 2018 y acabar
 
 Objetivo tener cuatro proyectos listos a mediados de 2018
+
+CALENDARIO
+
+diciembre 2017: probar lo de bing y crontab y que se vaya haciendo a fuego lento.
+ENero 2018: Aacabar Morbidity, tener claro que el objetico es tener un documento molon
+Febrero 2018: si he podido geocodificar hacer algun mapa bonito y una plicacio que de el riesgo de multa
+Febrero 2018: ir a por lo de los griegos.
+Abril-MAyo 2018, polen
+Junio 2018, repado final a todo.
