@@ -56,7 +56,7 @@ SetPrevalence <- function(data,pop="total"){
   for (p in provs){
     for (y in years){
       prov <- provincias[provincias$Codigo==p,]$nombre
-      pob <- poblacion %>% filter(tipo==pop) %>% filter(year==y) %>% filter(provincia==prov)
+      pob <- poblacion %>% dplyr::filter(tipo==pop) %>% dplyr::filter(year==y) %>% dplyr::filter(provincia==prov)
       pob <- as.numeric(pob$pob)
       data[data$prov==p & year(data$fecha)==y,]$total.prev <- round(data[data$prov==p & year(as.Date(data$fecha))==y,]$total / (pob / 100000), 4)
     }

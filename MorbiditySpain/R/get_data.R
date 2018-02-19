@@ -52,12 +52,12 @@ FilterProvincia <- function(data,provincia){
     print(provincias)
     stop("provincia must be an integer between 1 and 52")
   }
-  data <- data %>% filter(prov_hosp==provincia)
+  data <- data %>% dplyr::filter(prov_hosp==provincia)
   return(data)
 }
 
 FilterEmergency <- function(data){
-  data <- data %>% filter(diag_in==2)
+  data <- data %>% dplyr::filter(diag_in==2)
   return(data)
 }
 
@@ -66,9 +66,9 @@ FilterDiagnosis1 <- function(data,diagnosis_id){
     print(diag1)
     stop("diagnosis_id must be an integer between 1 and 17")
   }
-  dd <- diag1 %>% filter(id == diagnosis_id)
+  dd <- diag1 %>% dplyr::filter(id == diagnosis_id)
   data$temp <- as.numeric(substr(gsub("V","",data$diag_ppal),1,3))
-  data <- data %>% filter(temp >= dd$start) %>% filter(temp <= dd$end) %>% select(-temp)
+  data <- data %>% dplyr::filter(temp >= dd$start) %>% dplyr::filter(temp <= dd$end) %>% select(-temp)
   return(data)
 }
 
@@ -77,15 +77,15 @@ FilterDiagnosis2 <- function(data,diagnosis_id){
     print(diag2)
     stop("diagnosis_id must be an integer between 1 and 123")
   }
-  dd <- diag2 %>% filter(id == diagnosis_id)
+  dd <- diag2 %>% dplyr::filter(id == diagnosis_id)
   if (!dd$V) {
-    data <- data %>% filter(grepl("V",diag_ppal) == FALSE)
+    data <- data %>% dplyr::filter(grepl("V",diag_ppal) == FALSE)
     data$temp <- as.numeric(substr(gsub("V","",data$diag_ppal),1,3))
-    data <-  data %>% filter(temp >= dd$start) %>% filter(temp <= dd$end) %>% select(-temp)
+    data <-  data %>% dplyr::filter(temp >= dd$start) %>% dplyr::filter(temp <= dd$end) %>% select(-temp)
   } else {
-    data <- data %>% filter(grepl("V",diag_ppal) == TRUE)
+    data <- data %>% dplyr::filter(grepl("V",diag_ppal) == TRUE)
     data$temp <- as.numeric(substr(gsub("V","",data$diag_ppal),1,2))
-    data <- data  %>% filter(temp >= as.numeric(gsub("V","",dd$start))) %>% filter(temp <= as.numeric(gsub("V","",dd$end))) %>% select(-temp)
+    data <- data  %>% dplyr::filter(temp >= as.numeric(gsub("V","",dd$start))) %>% dplyr::filter(temp <= as.numeric(gsub("V","",dd$end))) %>% select(-temp)
   }
   return(data)
 }
