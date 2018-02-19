@@ -44,6 +44,7 @@ ReduceData <- function(data,provincia=TRUE,date="day",diag=NULL,sex=FALSE){
 }
 
 SetPrevalence <- function(data,pop="total"){
+  data <- data %>% dplyr::filter(year(fecha)>=2000)
   if(!("total" %in% colnames(data))){
     stop("Prevalences is only for accumulated values")
   }
