@@ -1,6 +1,7 @@
 ReadZip <- function(year){
   #descomprime
-  filezip <- sprintf("https://github.com/rafaelmenmell/MorbiditySpain/raw/master/data/datos_morbi%s.zip",substr(year,3,4))
+  #filezip <- sprintf("https://github.com/rafaelmenmell/MorbiditySpain/raw/master/data/datos_morbi%s.zip",substr(year,3,4))
+  filezip <- sprintf("ftp://www.ine.es/temas/morbihos/datos_%s.zip",year,3,4)
   temp <- tempfile()
   download.file(filezip,temp)
   fileu <- unzip(temp,list=TRUE)$Name
@@ -14,7 +15,7 @@ ReadZip <- function(year){
   data$prov_hosp <- as.integer(data$prov_hosp)
   data$sexo <- as.integer(data$sexo)
   data$prov_res <- as.integer(data$prov_res)
-  data$fecha_alta <- ISOdate(year=as.integer(substr(data$fecha_alta,1,2))+2000,month = as.integer(substr(data$fecha_alta,3,4)),day = as.integer(substr(data$fecha_alta,5,6)))
+  data$fecha_alta <- ISOdate(year=as.integer(substr(data$fecha_alta,1,2))+trunc(year/100)*100,month = as.integer(substr(data$fecha_alta,3,4)),day = as.integer(substr(data$fecha_alta,5,6)))
   data$motivo_alta <- as.integer(data$motivo_alta)
   data$edad_anyos <- as.integer(data$edad_anyos)
   data$edad_meses <- as.integer(data$edad_meses)

@@ -16,3 +16,5 @@ library(xts)
 data.ejemplo2 <- data.ejemplo2 %>% dplyr::filter(fecha>="2005-01-01")
 xts <- xts(x = data.ejemplo2$total.prev,order.by = data.ejemplo2$fecha)
 dygraph(data = xts) %>% dyRangeSelector()
+
+data <- MorbiditySpain::GetMorbiData(y1 = 1978,y2 = 1979)
